@@ -33,7 +33,6 @@ yourself with all variables in order to work through these exercises.
 
 ```{r hotels-skim}
 skim(hotels)
-glimpse(country)
 ```
 
 
@@ -158,7 +157,7 @@ count(adults, is_canceled)%>%
 arrange(desc(n))
 ```
 
-```{r canceled}
+```{r canceledvnot}
 hotels %>%
   count(is_canceled)%>%
   arrange(desc(n))
