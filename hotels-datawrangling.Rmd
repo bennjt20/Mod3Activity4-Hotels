@@ -33,6 +33,7 @@ yourself with all variables in order to work through these exercises.
 
 ```{r hotels-skim}
 skim(hotels)
+glimpse(country)
 ```
 
 
@@ -45,14 +46,22 @@ from the US (`country` code `"USA"`) and the `lead_time` is less than 1 day.
 
 **Note:** You will need to set `eval=TRUE` when you have an answer you want to 
 try out.
+<chr>hotel, arrival_date_month, meal, country, market_segment, distribution
 
-```{r travel-whim, eval=FALSE}
+```{r travel-whim, eval=TRUE}
+hotels %>%
+   filter(
+    country != "USA",
+    lead_time < 1
+  )
+```
+Note: This was original prompt:
+``{r travel-whim, eval=FALSE}
 hotels %>%
   filter(
     country ____ "USA", 
     lead_time ____ ____
     )
-```
 
 ### Exercise 3.
 
@@ -66,10 +75,10 @@ In the following chunk, replace
 **Note:** You will need to set `eval=TRUE` when you have an answer you want to 
 try out.
 
-```{r some-children, eval=FALSE}
+```{r some-children, eval=TRUE}
 hotels %>%
   filter(
-    children [AT LEAST] 1 [OR] babies [AT LEAST] 1
+    children >= 1 | babies >= 1
     )
 ```
 
@@ -81,15 +90,26 @@ number of bookings in resort hotels that have more than 1 child **or** baby
 in the room? Then, do the same for city hotels, and compare the numbers of 
 rows in the resulting filtered data frames.
 
+We are more ikely to find bookings with children or babies at city hotels.
+Bookings at resort hotels with children or babies: 3,929
+Bookings at city hotels with children or babies: 5,403
+
 ```{r resort-children}
-# add code here
-# pay attention to correctness and code style
+hotels %>%
+  filter(
+    hotel == "Resort Hotel",
+    children >= 1 | babies >= 1
+    )
 ```
 
 ```{r city-children}
-# add code here
-# pay attention to correctness and code style
+hotels %>%
+  filter(
+    hotel == "City Hotel",
+    children >= 1 | babies >= 1
+    )
 ```
+
 
 ### Exercise 5.
 
@@ -98,14 +118,16 @@ results in descending order so the most common observation is on top. What is
 the most common number of adults in bookings in this dataset? Are there any 
 surprising results?
 
+The most common number of adults is 2. This is somewhat surprising, because I would expect that people travelling solo would outnumber pairs. Another surprising result is the number of zeros ("0"). 
+
 **Note:** Don't forget to label your R chunk as well (where it says `label-me-1`). 
 Your label should be short, informative, and shouldn't include spaces. It also 
 shouldn't repeat a previous label, otherwise R Markdown will give you an 
 error about repeated R chunk labels.
 
-```{r label-me-1}
-# add code here
-# pay attention to correctness and code style
+```{r adults-Descending}
+hotels %>%
+  count(adults, sort = TRUE)
 ```
 
 ### Exercise 6.
@@ -116,10 +138,33 @@ reveal about the surprising results you spotted in the previous exercise?
 
 **Note:** Don't forget to label your R chunk as well (where it says `label-me-2`). 
 
-```{r label-me-2}
-# add code here
-# pay attention to correctness and code style
+Pairs of 2 were the most likely to cancel, and not to cancel.
+Also, it is surprising that so many bookings were canceled period (44K), compared with not canceled (75K).
+
+```{r canceled}
+hotels %>%
+  filter(
+    is_canceled == "0")%>%
+count(adults, is_canceled)%>%
+arrange(desc(n))
 ```
+
+
+```{r not-canceled}
+hotels %>%
+  filter(
+    is_canceled == "1")%>%
+count(adults, is_canceled)%>%
+arrange(desc(n))
+```
+
+```{r canceled}
+hotels %>%
+  count(is_canceled)%>%
+  arrange(desc(n))
+```
+
+
 
 ### Exercise 7.
 
